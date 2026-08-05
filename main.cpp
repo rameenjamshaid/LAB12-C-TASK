@@ -1,20 +1,29 @@
 #include <iostream>
-#include "SignalProcessor.h"
-#include "FilterFunctions.h"
-#include "DataReader.h"
+#include "DeviceParameters.h"
+#include "ControlLogic.h"
+#include "SafetyChecks.h"
 
 using namespace std;
 
 int main()
 {
-    DataReader reader;
-    FilterFunctions filter;
-    SignalProcessor processor;
+    float glucose;
 
-    float signal = reader.readData();
-    signal = filter.lowPassFilter(signal);
+    cout << "Enter Glucose Level: ";
+    cin >> glucose;
 
-    processor.processSignal(signal);
+    DeviceParameters patient(glucose);
+    SafetyChecks safety;
+    ControlLogic controller;
+
+    if (safety.checkSafety(patient.getGlucoseLevel()))
+    {
+        controller.calculateDose(patient.getGlucoseLevel());
+    }
+    else
+    {
+        cout << "Warning! Unsafe glucose level." << endl;
+    }
 
     return 0;
 }
