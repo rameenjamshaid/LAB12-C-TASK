@@ -1,10 +1,20 @@
-#include "PulseOximeter.h"
+#include <iostream>
+#include "SignalProcessor.h"
+#include "FilterFunctions.h"
+#include "DataReader.h"
 
-int main(){
+using namespace std;
 
-    PulseOximeter patient("MD101",75,98);
+int main()
+{
+    DataReader reader;
+    FilterFunctions filter;
+    SignalProcessor processor;
 
-    patient.displayAll();
+    float signal = reader.readData();
+    signal = filter.lowPassFilter(signal);
+
+    processor.processSignal(signal);
 
     return 0;
 }
