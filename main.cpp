@@ -1,29 +1,36 @@
 #include <iostream>
-#include "DeviceParameters.h"
-#include "ControlLogic.h"
-#include "SafetyChecks.h"
+
+#include "SensorNode.h"
+#include "DataAggregator.h"
+#include "WirelessModule.h"
 
 using namespace std;
 
 int main()
 {
-    float glucose;
+    SensorNode sensor1(101);
+    SensorNode sensor2(102);
 
-    cout << "Enter Glucose Level: ";
-    cin >> glucose;
+    DataAggregator aggregator;
+    WirelessModule wireless;
 
-    DeviceParameters patient(glucose);
-    SafetyChecks safety;
-    ControlLogic controller;
 
-    if (safety.checkSafety(patient.getGlucoseLevel()))
-    {
-        controller.calculateDose(patient.getGlucoseLevel());
-    }
-    else
-    {
-        cout << "Warning! Unsafe glucose level." << endl;
-    }
+    sensor1.collectData();
+    sensor2.collectData();
+
+
+    aggregator.addData(sensor1.getData());
+    aggregator.addData(sensor2.getData());
+
+
+    float average = aggregator.getAverage();
+
+    cout << "\nAverage Sensor Data: "
+         << average << endl;
+
+
+    wireless.transmitData(average);
+
 
     return 0;
 }
