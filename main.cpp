@@ -1,35 +1,37 @@
 #include <iostream>
 
-#include "SensorNode.h"
-#include "DataAggregator.h"
-#include "WirelessModule.h"
+#include "ComponentTester.h"
+#include "VoltageCalculator.h"
+#include "SafetyReport.h"
 
 using namespace std;
 
 int main()
 {
-    SensorNode sensor1(101);
-    SensorNode sensor2(102);
-
-    DataAggregator aggregator;
-    WirelessModule wireless;
+    float voltage;
+    float current;
 
 
-    sensor1.collectData();
-    sensor2.collectData();
+    cout << "Enter Voltage (V): ";
+    cin >> voltage;
 
 
-    aggregator.addData(sensor1.getData());
-    aggregator.addData(sensor2.getData());
+    cout << "Enter Current (A): ";
+    cin >> current;
 
 
-    float average = aggregator.getAverage();
+    ComponentTester tester;
+    VoltageCalculator calculator;
+    SafetyReport report;
 
-    cout << "\nAverage Sensor Data: "
-         << average << endl;
+
+    bool result = tester.testComponent(voltage, current);
 
 
-    wireless.transmitData(average);
+    float power = calculator.calculatePower(voltage, current);
+
+
+    report.generateReport(result, power);
 
 
     return 0;
